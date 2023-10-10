@@ -17,7 +17,7 @@
             {
                 Console.WriteLine($"[{i}] worker2 (number two): START [{DateTime.Now}]");
                 str.SaveData();
-                Console.WriteLine($"[{i}] worker1 (numbe one): THE END [{DateTime.Now}]");
+                Console.WriteLine($"[{i}] worker2 (number two): THE END [{DateTime.Now}]");
             }
         }
 
