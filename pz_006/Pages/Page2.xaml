@@ -9,9 +9,10 @@
     Background="LightSeaGreen">
 
     <Grid>
-        <StackPanel>
-            <TextBlock Text="Страница 2" FontSize="36" />
-            <TextBlock x:Name="textBlock1" FontSize="24" TextWrapping="Wrap"/>
+        <StackPanel Padding="15">
+            <TextBlock Text="Страница  1" Style="{ThemeResource HeaderTextBlockStyle}" />
+            <Button x:Name="btn_forward" Content="Вперед" Click="btn_forward_Click" Margin="5"/>
+            <Button x:Name="btn_back" Content="Назад" Click="btn_back_Click" Margin="5"/>
         </StackPanel>
     </Grid>
 </Page>
