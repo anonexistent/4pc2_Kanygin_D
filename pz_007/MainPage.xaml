@@ -1,0 +1,39 @@
+﻿<Page
+    x:Class="pz_007.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:pz_007"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{StaticResource AppBarBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Margin="15" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <TextBlock Text="> phis: " FontWeight="Bold" FontSize="24" Margin="5"/>
+            <TextBlock Text="> phis available: " FontWeight="Bold" FontSize="24" Margin="5"/>
+            <TextBlock Text="> podkachka" FontWeight="Bold" FontSize="24" Margin="5"/>
+            <TextBlock Text="> podkachka available: " FontWeight="Bold" FontSize="24" Margin="5"/>
+            <TextBlock Text="> total virtual: " FontWeight="Bold" FontSize="24" Margin="5"/>
+            <TextBlock Text="> avaliable virtual: " FontWeight="Bold" FontSize="24" Margin="5"/>
+            <TextBlock Text="> proc memory: " FontWeight="Bold" FontSize="24" Margin="5"/>
+            <TextBlock Text="> memory load: " FontWeight="Bold" FontSize="24" Margin="5"/>
+        </StackPanel>
+        <StackPanel VerticalAlignment="Center" Grid.Column="1">
+            <TextBox IsReadOnly="True" x:Name="tbPh" Margin="5"/>
+            <TextBox IsReadOnly="True" x:Name="tbPhA" Margin="5"/>
+            <TextBox IsReadOnly="True" x:Name="tbPod" Margin="5"/>
+            <TextBox IsReadOnly="True" x:Name="tbPodA" Margin="5"/>
+            <TextBox IsReadOnly="True" x:Name="tbVirt" Margin="5"/>
+            <TextBox IsReadOnly="True" x:Name="tbVirtA" Margin="5"/>
+            <TextBox IsReadOnly="True" x:Name="tbProc" Margin="5"/>
+            <TextBox IsReadOnly="True" x:Name="tbLoad" Margin="5"/>
+        </StackPanel>
+
+    </Grid>
+</Page>
