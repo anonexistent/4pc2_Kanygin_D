@@ -6,13 +6,16 @@ namespace pz_010
     {
         #region SystemMethods
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern IntPtr VirtualAlloc(IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
+        static extern IntPtr VirtualAlloc(IntPtr lpAddress, 
+            uint dwSize, uint flAllocationType, uint flProtect);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool VirtualFree(IntPtr lpAddress, uint dwSize, uint dwFreeType);
+        static extern bool VirtualFree(IntPtr lpAddress, 
+            uint dwSize, uint dwFreeType);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern int VirtualQuery(IntPtr lpAddress, out MemoryBasicInformation lpBuffer, int dwLength);
+        static extern int VirtualQuery(IntPtr lpAddress, 
+            out MemoryBasicInformation lpBuffer, int dwLength);
         #endregion
 
         #region SystemConst
@@ -59,7 +62,7 @@ namespace pz_010
                 buffer[i] = value;
             }
 
-            Marshal.Copy(buffer, 0, regionStartAddress, buffer.Length);
+            //Marshal.Copy(buffer, 0, regionStartAddress, buffer.Length);
             // output in octal(8) number system
             Console.WriteLine("fiiling ok (" + value.ToString("X") +")");
             Console.WriteLine("\t\tproofs:");
