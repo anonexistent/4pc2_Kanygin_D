@@ -62,7 +62,7 @@ namespace pz_010
                 buffer[i] = value;
             }
 
-            //Marshal.Copy(buffer, 0, regionStartAddress, buffer.Length);
+            Marshal.Copy(buffer, 0, regionStartAddress, buffer.Length);
             // output in octal(8) number system
             Console.WriteLine("fiiling ok (" + value.ToString("X") +")");
             Console.WriteLine("\t\tproofs:");
