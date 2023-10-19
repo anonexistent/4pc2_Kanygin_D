@@ -55,50 +55,60 @@ namespace pz_011
 
         static void Main(string[] args)
         {
-            // give me ur memory
-            IntPtr ptr = Marshal.AllocHGlobal(1024);
+            IntPtr address = VirtualAlloc(IntPtr.Zero, 4096, MEM_COMMIT, PAGE_READWRITE);
 
-            DisplayMemoryContents(ptr, 1024);
+            if (address == IntPtr.Zero)
+            {
+                Console.WriteLine("fatal eror: region is not");
+                return;
+            }
 
-            /*
-            PAGE_EXECUTE                0x10 (16)
-            PAGE_EXECUTE_READ           0x20
-            PAGE_EXECUTE_READWRITE      0x40
-            PAGE_EXECUTE_WRITECOPY      0x80 (128)
-            PAGE_NOACCESS               0x01
-            PAGE_READONLY               0x02
-            PAGE_READWRITE              0x04
-            PAGE_WRITECOPY              0x08
-            PAGE_TARGETS_INVALID        0x40000000
-            PAGE_TARGETS_NO_UPDATE      0x40000000
-             */
+            MemoryBasicInformation memInfo;
+            int result = VirtualQuery(address, out memInfo, Marshal.SizeOf(typeof(MemoryBasicInformation)));
+            if (result == 0)Console.WriteLine("fatal eror: no info");
+            Console.WriteLine("(AllocationProtect) " + memInfo.AllocationProtect + "\t(Protect) " + memInfo.Protect);
+
+            // 2 type output
+            Console.WriteLine("region home: " + address.ToString() 
+                //+ $" (0x{address.ToString("X")})"
+                );
+
+            // current protect
             uint oldProtect;
-            if (!VirtualProtect(ptr, 1024, 0x40, out oldProtect))
+
+            // try change guard
+            uint newProtect = 0x04;
+            if (!VirtualProtect(address, 4096, newProtect, out oldProtect))
             {
-                Console.WriteLine(oldProtect.ToString());
-                // обработка ошибки
-                uint error = GetLastError();
-                string message;
-                FormatMessage(0x1300, IntPtr.Zero, error, 0, out message, 0, IntPtr.Zero);
-                Console.WriteLine("Ошибка: {0}", message);
+                DisplayErrorMessage("change guard fail");
+                VirtualFree(address, 0, 0);
                 return;
             }
+            Console.WriteLine("new guard");
 
-            // использование памяти
+            result = VirtualQuery(address, out memInfo, Marshal.SizeOf(typeof(MemoryBasicInformation)));
+            if (result == 0) Console.WriteLine("fatal eror: no info");
+            Console.WriteLine("(AllocationProtect) " + memInfo.AllocationProtect + "\t(Protect) " + memInfo.Protect);
 
-            // изменение защиты памяти на исходную
-            if (!VirtualProtect(ptr, 1024, oldProtect, out oldProtect))
+            // size - 4k, but 128 enough for demo
+            DisplayMemoryContents(address, 128);
+
+            // try write (need exeprion if it s work)
+            try
             {
-                // обработка ошибки
-                uint error = GetLastError();
-                string message;
-                FormatMessage(0x1300, IntPtr.Zero, error, 0, out message, 0, IntPtr.Zero);
-                Console.WriteLine("Ошибка: {0}", message);
-                return;
+                // write from start bytes
+                Marshal.WriteInt64(address, 4584323413317295619);
+                Console.WriteLine(">>write status - ok");
+            }
+            catch (AccessViolationException ex)
+            {
+                DisplayErrorMessage(ex.Message);
             }
 
-            // освобождение памяти
-            Marshal.FreeHGlobal(ptr);
+            // size - 4k, but 128 enough for demo
+            DisplayMemoryContents(address, 128);
+
+            VirtualFree(address, 0, 0);
 
             #region Old
             //IntPtr region = VirtualAlloc(IntPtr.Zero, MEM_COMMIT, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
@@ -128,6 +138,16 @@ namespace pz_011
             //Console.WriteLine("all. protect: " + memInfo.AllocationProtect);
             #endregion
         }
+        static void DisplayErrorMessage(string message)
+        {
+            uint errorCode = GetLastError(); string errorMessage;
+
+            uint result = FormatMessage(0x00001000 | 0x00000200 | 0x00000100, 
+                IntPtr.Zero, errorCode, 0, out errorMessage, 0, IntPtr.Zero);
+
+            if (result != 0) Console.WriteLine("Ошибка: " + message + " - " + errorMessage.Trim());
+            else Console.WriteLine("Ошибка: " + message + " - код ошибки: " + errorCode);
+        }
 
         static void ReserveMemoryRegions(int regionSize)
         {
@@ -156,10 +176,7 @@ namespace pz_011
         static void FillMemory(IntPtr startAddress, int size, int number)
         {
             byte[] buffer = new byte[size];
-            for (int i = 0; i < size; i++)
-            {
-                buffer[i] = (byte)number;
-            }
+            for (int i = 0; i < size; i++) buffer[i] = (byte)number;
             Marshal.Copy(buffer, 0, startAddress, size);
         }
 
@@ -167,10 +184,7 @@ namespace pz_011
         {
             byte[] buffer = new byte[size];
             Marshal.Copy(startAddress, buffer, 0, size);
-            for (int i = 0; i < size; i++)
-            {
-                Console.Write(buffer[i] + " ");
-            }
+            for (int i = 0; i < size; i++) Console.Write(buffer[i] + " ");
             Console.WriteLine();
         }
     }
