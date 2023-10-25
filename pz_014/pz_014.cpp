@@ -95,6 +95,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hwnd, &ps);
+
+        // font color
+        SetTextColor(hdc, RGB(0, 0, 255)); // Синий цвет
+
+        // font for okei
+        HFONT hFont = CreateFont(60, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
+            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, L"Consolas");
+        SelectObject(hdc, hFont);
+
+        // win size
+        RECT rect;
+        GetClientRect(hwnd, &rect);
+        int width = rect.right - rect.left;
+        int height = rect.bottom - rect.top;
+        
+        const wchar_t text[] = L"ОКЭИ";
+        SIZE textSize;
+        GetTextExtentPoint32(hdc, text, wcslen(text), &textSize);
+        int x = (width - textSize.cx) / 2;
+        int y = height / 4;
+
+        TextOut(hdc, x, y, text, wcslen(text));
+
         return 0;
     }
     // event btn_click()
