@@ -41,7 +41,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         return 0;
     }
 
-    // Создание текстового поля
+    // main query
     hTextBox = CreateWindowEx(
         0,
         L"EDIT",
