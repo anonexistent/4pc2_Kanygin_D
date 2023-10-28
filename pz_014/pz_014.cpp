@@ -1,4 +1,6 @@
-﻿#include <Windows.h>
+﻿//pz_014.cpp
+
+#include <Windows.h>
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -18,7 +20,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.lpfnWndProc = WndProc;
     wcex.hInstance = hInstance;
-    wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
     wcex.lpszClassName = CLASS_NAME;
     RegisterClassEx(&wcex);
 
@@ -29,8 +30,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         WINDOW_TITLE,
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-        NULL,
-        NULL,
+        NULL, NULL,
         hInstance,
         NULL
     );
@@ -143,7 +143,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         return 0;
 
-        //for cute background color ☺☻
+    //for cute background color ☺☻
     case WM_ERASEBKGND:
     {
         HDC hdc = (HDC)wParam;
