@@ -1,4 +1,4 @@
-﻿//pz_014.cpp
+﻿//pz_014.cppd
 
 #include <Windows.h>
 
@@ -19,7 +19,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.lpfnWndProc = WndProc;
-    wcex.hInstance = hInstance;
+    wcex.hInstance = hInstance; 
+    wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
     wcex.lpszClassName = CLASS_NAME;
     RegisterClassEx(&wcex);
 
