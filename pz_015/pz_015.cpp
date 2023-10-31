@@ -1,4 +1,4 @@
-﻿//pz_015.cppd
+﻿//pz_015.cpp
 
 #include <Windows.h>
 
