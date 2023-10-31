@@ -87,11 +87,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    PAINTSTRUCT ps;
-    HDC hdc = BeginPaint(hwnd, &ps);        
-    
-    RECT rect;
-
     switch (msg)
     {
     case WM_CREATE:
@@ -99,8 +94,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_PAINT:
     {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hwnd, &ps);
+
         // font color
-        SetTextColor(hdc, RGB(0, 0, 255)); // blue
+        SetTextColor(hdc, RGB(0, 0, 255)); // Синий цвет
 
         // font for okei
         HFONT hFont = CreateFont(60, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
@@ -108,6 +106,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         SelectObject(hdc, hFont);
 
         // win size
+        RECT rect;
         GetClientRect(hwnd, &rect);
         int width = rect.right - rect.left;
         int height = rect.bottom - rect.top;
@@ -179,16 +178,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG_PTR)CreateSolidBrush(RGB(38, 145, 22)));
         RedrawWindow(hwnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
         break;
-
     case WM_ACTIVATE:
         // wsipe color
         SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG_PTR)CreateSolidBrush(RGB(255, 0, 0)));
         RedrawWindow(hwnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
         break;
-
     case WM_RBUTTONDBLCLK:
         // wsipe color
-        MessageBox(hwnd, L"right click", L"warning!",  MB_ABORTRETRYIGNORE | MB_ICONINFORMATION);
+        MessageBox(hwnd, L"right click", L"warning!", MB_OK | MB_ICONINFORMATION);
         SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG_PTR)CreateSolidBrush(RGB(255, 0, 77)));
         RedrawWindow(hwnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
         break;
