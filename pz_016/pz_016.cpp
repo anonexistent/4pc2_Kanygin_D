@@ -160,6 +160,7 @@
 
 #include <Windows.h>
 #include "../pz_012Lib/Library.h"
+#include <sstream>
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void InitializeComponent(HWND hwnd, HINSTANCE hInstance);
@@ -282,6 +283,12 @@ void InitializeComponent(HWND hwnd, HINSTANCE hInstance)
         NULL
     );
 
+    hTextBoxResult = CreateWindowEx(
+    0, L"EDIT", L"",
+    WS_CHILD | WS_VISIBLE,
+    10, 130, 200, 25,
+    hwnd, NULL, hInstance, NULL
+    );
 }
 
 void iLoveOcei(HWND hwnd, HDC hdc)
@@ -334,25 +341,50 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             if (HIWORD(wParam) == BN_CLICKED)
             {
+                wchar_t text1[256];
+                SendMessage(hTextBox1, WM_GETTEXT, (WPARAM)256, (LPARAM)text1);                
+                wchar_t text2[256];
+                SendMessage(hTextBox2, WM_GETTEXT, (WPARAM)256, (LPARAM)text2);
+
+                double num1, num2, r;
+
+                std::wstringstream st1(text1);
+                std::wstringstream st2(text2);
+                st1 >> num1;
+                st2 >> num2;
+
                 if ((HWND)lParam == hButtonAdd)
                 {
-                    //MessageBox(hwnd, L"+ click +", L"+", MB_OK);
+                    //std::wstringstream temp;
+                    //temp << num1;
 
+                    //MessageBox(hwnd, temp.str().c_str(), L"add!", MB_OK | MB_ICONHAND);
 
+                    r = pz_012Lib::Arithmetic::Add(num1, num2);
+
+                    std::wstringstream temp2;
+                    temp2 << r;
+
+                    SendMessage(hTextBoxResult, WM_SETTEXT, (WPARAM)256, (LPARAM)temp2.str().c_str());
+
+                    //MessageBox(hwnd, temp2.str().c_str(), L"", MB_ABORTRETRYIGNORE | MB_ICONASTERISK);
                 }
                 else if((HWND)lParam == hButtonSubtract)
                 {
+                    r = pz_012Lib::Arithmetic::Subtract(num1, num2);
 
                 }
                 else if((HWND)lParam == hButtonMultiply)
                 {
                     //MessageBox(hwnd, L"* click *", L"*", MB_OK);
-
+                    
+                    r = pz_012Lib::Arithmetic::Multiply(num1, num2);
 
 
                 }
                 else if((HWND)lParam == hButtonDivide)
                 {
+                    r = pz_012Lib::Arithmetic::Divide(num1, num2);
 
                 }
             }

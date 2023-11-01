@@ -142,6 +142,11 @@
     <Image Include="pz_016.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\pz_012Lib\pz_012Lib.vcxproj">
+      <Project>{f0c2729a-f5e9-4f57-b737-08b45080f49b}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
