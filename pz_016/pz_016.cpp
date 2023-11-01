@@ -1,4 +1,6 @@
-﻿#pragma region test
+﻿//  pz_016.cpp
+
+#pragma region test2
 //#include <Windows.h>
 //#include <string>
 //#include <sstream>
@@ -159,8 +161,8 @@
 #pragma endregion
 
 #include <Windows.h>
-#include "../pz_012Lib/Library.h"
 #include <sstream>
+#include "../pz_012Lib/Library.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void InitializeComponent(HWND hwnd, HINSTANCE hInstance);
@@ -202,7 +204,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         className,
         windowTitle,
         WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+        CW_USEDEFAULT, CW_USEDEFAULT, 350, 400,
         NULL, NULL,
         hInstance,
         NULL
@@ -231,7 +233,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 void InitializeComponent(HWND hwnd, HINSTANCE hInstance)
 {
-    hBackgroundBrush = CreateSolidBrush(RGB(199,255,255));
+    hBackgroundBrush = CreateSolidBrush(RGB(199, 255, 255));
 
     hTextBox1 = CreateWindowEx(
         0, L"EDIT", L"",
@@ -284,10 +286,10 @@ void InitializeComponent(HWND hwnd, HINSTANCE hInstance)
     );
 
     hTextBoxResult = CreateWindowEx(
-    0, L"EDIT", L"",
-    WS_CHILD | WS_VISIBLE,
-    10, 130, 200, 25,
-    hwnd, NULL, hInstance, NULL
+        0, L"EDIT", L"",
+        WS_CHILD | WS_VISIBLE,
+        10, 130, 200, 25,
+        hwnd, NULL, hInstance, NULL
     );
 }
 
@@ -305,91 +307,131 @@ void iLoveOcei(HWND hwnd, HDC hdc)
     SIZE textSize;
     GetTextExtentPoint32(hdc, text, wcslen(text), &textSize);
     int x = (width - textSize.cx) / 2;
-    int y = height / 4;
+    int y = height / 2;
 
-    TextOut(hdc, x, y, text, wcslen(text)<<1);
+    TextOut(hdc, x, y, text, wcslen(text) << 1);
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
     {
-        case WM_CREATE: return 0;
+    case WM_CREATE: return 0;
 
-        case WM_CLOSE:
+    case WM_CLOSE:
+    {
+        DestroyWindow(hwnd);
+    } return 0;
+
+    case WM_DESTROY:
+    {
+        PostQuitMessage(0);
+    } return 0;
+
+    case WM_SIZE:
+    {
+        int width = LOWORD(lParam);
+        int height = HIWORD(lParam);
+
+        //  center aligment!!
+        int posX = (width - 200) / 2;
+        int posY = (height - 150) / 2;
+
+        SetWindowPos(hTextBox1, NULL, posX, posY, 200, 25, SWP_NOZORDER);
+        SetWindowPos(hTextBox2, NULL, posX, posY + 30, 200, 25, SWP_NOZORDER);
+
+        SetWindowPos(hButtonAdd, NULL, posX, posY + 60, 50, 25, SWP_NOZORDER);
+        SetWindowPos(hButtonSubtract, NULL, posX + 60, posY + 90, 50, 25, SWP_NOZORDER);
+        SetWindowPos(hButtonMultiply, NULL, posX, posY + 120, 50, 25, SWP_NOZORDER);
+        SetWindowPos(hButtonDivide, NULL, posX + 60, posY + 150, 50, 25, SWP_NOZORDER);
+
+        SetWindowPos(hTextBoxResult, NULL, posX, posY + 180, 200, 25, SWP_NOZORDER);
+
+    }
+
+    case WM_PAINT:
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hwnd, &ps);
+
+        FillRect(hdc, &ps.rcPaint, (HBRUSH)hBackgroundBrush);
+
+        iLoveOcei(hwnd, hdc);
+
+    } return 0;
+
+    case WM_COMMAND:
+    {
+        if (HIWORD(wParam) == BN_CLICKED)
         {
-            DestroyWindow(hwnd);
-        } return 0;
+            wchar_t text1[256];
+            SendMessage(hTextBox1, WM_GETTEXT, (WPARAM)256, (LPARAM)text1);
+            wchar_t text2[256];
+            SendMessage(hTextBox2, WM_GETTEXT, (WPARAM)256, (LPARAM)text2);
 
-        case WM_DESTROY:
-        {
-            PostQuitMessage(0);
-        } return 0;
+            double num1, num2, r;
 
-        case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hwnd, &ps);
+            std::wstringstream st1(text1);
+            std::wstringstream st2(text2);
+            st1 >> num1;
+            st2 >> num2;
 
-            FillRect(hdc, &ps.rcPaint,(HBRUSH)hBackgroundBrush);
-
-            iLoveOcei(hwnd, hdc);
-        
-        } return 0;
-
-        case WM_COMMAND:
-        {
-            if (HIWORD(wParam) == BN_CLICKED)
+            if ((HWND)lParam == hButtonAdd)
             {
-                wchar_t text1[256];
-                SendMessage(hTextBox1, WM_GETTEXT, (WPARAM)256, (LPARAM)text1);                
-                wchar_t text2[256];
-                SendMessage(hTextBox2, WM_GETTEXT, (WPARAM)256, (LPARAM)text2);
+                //std::wstringstream temp;
+                //temp << num1;
 
-                double num1, num2, r;
+                //MessageBox(hwnd, temp.str().c_str(), L"add!", MB_OK | MB_ICONHAND);
 
-                std::wstringstream st1(text1);
-                std::wstringstream st2(text2);
-                st1 >> num1;
-                st2 >> num2;
+                //r = pz_012Lib::Arithmetic::Add(num1, num2);
+                r = num1 + num2;
 
-                if ((HWND)lParam == hButtonAdd)
-                {
-                    //std::wstringstream temp;
-                    //temp << num1;
+                std::wstringstream temp2;
+                temp2 << r;
 
-                    //MessageBox(hwnd, temp.str().c_str(), L"add!", MB_OK | MB_ICONHAND);
+                SendMessage(hTextBoxResult, WM_SETTEXT, (WPARAM)256, (LPARAM)temp2.str().c_str());
 
-                    r = pz_012Lib::Arithmetic::Add(num1, num2);
-
-                    std::wstringstream temp2;
-                    temp2 << r;
-
-                    SendMessage(hTextBoxResult, WM_SETTEXT, (WPARAM)256, (LPARAM)temp2.str().c_str());
-
-                    //MessageBox(hwnd, temp2.str().c_str(), L"", MB_ABORTRETRYIGNORE | MB_ICONASTERISK);
-                }
-                else if((HWND)lParam == hButtonSubtract)
-                {
-                    r = pz_012Lib::Arithmetic::Subtract(num1, num2);
-
-                }
-                else if((HWND)lParam == hButtonMultiply)
-                {
-                    //MessageBox(hwnd, L"* click *", L"*", MB_OK);
-                    
-                    r = pz_012Lib::Arithmetic::Multiply(num1, num2);
-
-
-                }
-                else if((HWND)lParam == hButtonDivide)
-                {
-                    r = pz_012Lib::Arithmetic::Divide(num1, num2);
-
-                }
+                //MessageBox(hwnd, temp2.str().c_str(), L"", MB_ABORTRETRYIGNORE | MB_ICONASTERISK);
             }
+            else if ((HWND)lParam == hButtonSubtract)
+            {
+                //r = pz_012Lib::Arithmetic::Subtract(num1, num2);
 
-        } return 0;
+                r = num1 - num2;
+
+                std::wstringstream temp2;
+                temp2 << r;
+
+                SendMessage(hTextBoxResult, WM_SETTEXT, (WPARAM)256, (LPARAM)temp2.str().c_str());
+
+            }
+            else if ((HWND)lParam == hButtonMultiply)
+            {
+                //MessageBox(hwnd, L"* click *", L"*", MB_OK);
+
+                //r = pz_012Lib::Arithmetic::Multiply(num1, num2);
+
+                r = num1 * num2;
+
+                std::wstringstream temp2;
+                temp2 << r;
+
+                SendMessage(hTextBoxResult, WM_SETTEXT, (WPARAM)256, (LPARAM)temp2.str().c_str());
+            }
+            else if ((HWND)lParam == hButtonDivide)
+            {
+                //r = pz_012Lib::Arithmetic::Divide(num1, num2);
+
+                r = num1 / num2;
+
+                std::wstringstream temp2;
+                temp2 << r;
+
+                SendMessage(hTextBoxResult, WM_SETTEXT, (WPARAM)256, (LPARAM)temp2.str().c_str());
+            }
+        }
+
+    } return 0;
     }
 
     return DefWindowProc(hwnd, msg, wParam, lParam);
