@@ -1,0 +1,33 @@
+﻿<Page x:Name="mainPage"
+    x:Class="pz_021.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:pz_021"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="Blue">
+
+    <Grid x:Name="gridMain">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock FontSize="26" Text="window width"/>
+        <TextBox Grid.Column="1" x:Name="tbWidth" Text="{Binding ElementName=gridMain, Path=ActualWidth, Mode=OneTime}" IsReadOnly="True"/>
+        <TextBlock FontSize="26" Grid.Row="1" Grid.Column="0" Text="window height"/>
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="tbHeight" Text="{Binding ElementName=gridMain, Path=ActualHeight, Mode=OneWay}" IsReadOnly="True"/>
+        <TextBlock FontSize="26" Grid.Row="2" Text="dog id"/>
+        <TextBox Grid.Row="2" Grid.Column="1" x:Name="tbId" Text="{Binding DogId}" IsReadOnly="True"/>
+        <TextBlock FontSize="26" Grid.Row="3" Text="dog name"/>
+        <TextBox Grid.Row="3" Grid.Column="1" x:Name="tbName" Text="{Binding DogName}" IsReadOnly="True"/>
+        
+    </Grid>
+</Page>
