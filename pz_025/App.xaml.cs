@@ -32,22 +32,22 @@ namespace pz_025
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            this.Resuming += App_Resuming;
         }
 
-        /// <summary>
-        /// Вызывается при обычном запуске приложения пользователем. Будут использоваться другие точки входа,
-        /// например, если приложение запускается для открытия конкретного файла.
-        /// </summary>
-        /// <param name="e">Сведения о запросе и обработке запуска.</param>
+        private void App_Resuming(object sender, object e)
+        {
+            ChangeBackgroundColor(Colors.LightGreen);
+            ShowMessage("Приложение возобновлено");
+        }
+
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
 
-            // Не повторяйте инициализацию приложения, если в окне уже имеется содержимое,
-            // только обеспечьте активность окна
             if (rootFrame == null)
             {
-                // Создание фрейма, который станет контекстом навигации, и переход к первой странице
+
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
@@ -57,7 +57,6 @@ namespace pz_025
                     //TODO: Загрузить состояние из ранее приостановленного приложения
                 }
 
-                // Размещение фрейма в текущем окне
                 Window.Current.Content = rootFrame;
             }
 
@@ -65,12 +64,9 @@ namespace pz_025
             {
                 if (rootFrame.Content == null)
                 {
-                    // Если стек навигации не восстанавливается для перехода к первой странице,
-                    // настройка новой страницы путем передачи необходимой информации в качестве параметра
-                    // навигации
                     rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
-                // Обеспечение активности текущего окна
+
                 Window.Current.Activate();
 
                 //ContentDialog a = new ContentDialog()
@@ -81,8 +77,8 @@ namespace pz_025
                 //};
                 //a.ShowAsync();
 
-                ChangeBackgroundColor(Colors.LightSkyBlue);
-                ShowMessage("Приложение активировано");
+                ChangeBackgroundColor(Colors.PaleVioletRed);
+                ShowMessage("Приложение запущено");
             }
         }
 
@@ -90,46 +86,40 @@ namespace pz_025
         {
             if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
             {
-                Frame rootFrame = Window.Current.Content as Frame;
-                var a = (Page)rootFrame.Content;
-                SolidColorBrush buttonBrush = new SolidColorBrush(Windows.UI.Colors.Red);
-                a.Background = buttonBrush;
+                //Frame rootFrame = Window.Current.Content as Frame;
+                //var a = (Page)rootFrame.Content;
+                //SolidColorBrush buttonBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+                //a.Background = buttonBrush;
 
-                ContentDialog b = new ContentDialog()
-                {
-                    Title = "launched",
-                    Content = "app has was been is ACTIVATED breaking news. understud ._. !!",
-                    PrimaryButtonText = "ok"
-                };
+                //ContentDialog b = new ContentDialog()
+                //{
+                //    Title = "launched",
+                //    Content = "app has was been is ACTIVATED breaking news. understud ._. !!",
+                //    PrimaryButtonText = "ok"
+                //};
+
+                ChangeBackgroundColor(Colors.LightSkyBlue);
+                ShowMessage("Приложение активировано");
             }
             base.OnActivated(args);
         }
 
-
-        /// <summary>
-        /// Вызывается в случае сбоя навигации на определенную страницу
-        /// </summary>
-        /// <param name="sender">Фрейм, для которого произошел сбой навигации</param>
-        /// <param name="e">Сведения о сбое навигации</param>
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
-        /// <summary>
-        /// Вызывается при приостановке выполнения приложения.  Состояние приложения сохраняется
-        /// без учета информации о том, будет ли оно завершено или возобновлено с неизменным
-        /// содержимым памяти.
-        /// </summary>
-        /// <param name="sender">Источник запроса приостановки.</param>
-        /// <param name="e">Сведения о запросе приостановки.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
+            ChangeBackgroundColor(Colors.LightGray);
+            ShowMessage("Приложение приостановлено");
+
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Сохранить состояние приложения и остановить все фоновые операции
-            deferral.Complete();
+
+            //deferral.Complete();
 
         }
+
         private async void ShowMessage(string message)
         {
             var dialog = new MessageDialog(message);
@@ -138,8 +128,6 @@ namespace pz_025
 
         private void ChangeBackgroundColor(Color color)
         {
-            // Предполагается, что у вас есть объект окна приложения, например, Window.Current
-            // Установка цвета фона
             ((Page)((Frame)Window.Current.Content).Content).Background = new SolidColorBrush(color);
         }
     }
